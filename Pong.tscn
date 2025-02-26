@@ -1,0 +1,135 @@
+[gd_scene load_steps=11 format=3 uid="uid://ddgqjktcyvbfx"]
+
+[ext_resource type="Script" path="res://ball.gd" id="1_nms5p"]
+[ext_resource type="Texture2D" uid="uid://byp7lkkjmhk1t" path="res://ball.png" id="2_s1dex"]
+[ext_resource type="Script" path="res://paddle.gd" id="3_lttf8"]
+[ext_resource type="Texture2D" uid="uid://dscukuk4hxq5w" path="res://paddle.png" id="4_xxon4"]
+[ext_resource type="Script" path="res://score_zone.gd" id="5_1cfvc"]
+[ext_resource type="Script" path="res://paddle_2.gd" id="5_y6kmb"]
+[ext_resource type="Texture2D" uid="uid://75xbejxo6k1i" path="res://background.png" id="7_kvkoi"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hlb1p"]
+radius = 56.0357
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_04rkn"]
+size = Vector2(46, 190)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tog4v"]
+size = Vector2(550.964, 651)
+
+[node name="Main" type="Node2D"]
+
+[node name="Ball" type="Area2D" parent="." groups=["ball"]]
+position = Vector2(578, 318)
+script = ExtResource("1_nms5p")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
+shape = SubResource("CircleShape2D_hlb1p")
+
+[node name="Sprite2D" type="Sprite2D" parent="Ball"]
+scale = Vector2(0.134975, 0.129583)
+texture = ExtResource("2_s1dex")
+
+[node name="Paddle1" type="Area2D" parent="." groups=["paddle"]]
+script = ExtResource("3_lttf8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Paddle1"]
+position = Vector2(90, 347)
+shape = SubResource("RectangleShape2D_04rkn")
+
+[node name="Sprite2D" type="Sprite2D" parent="Paddle1"]
+position = Vector2(90, 327)
+scale = Vector2(3.065, 4.2825)
+texture = ExtResource("4_xxon4")
+
+[node name="Paddle2" type="Area2D" parent="." groups=["paddle"]]
+position = Vector2(751, 347)
+script = ExtResource("5_y6kmb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Paddle2"]
+position = Vector2(290, 5)
+shape = SubResource("RectangleShape2D_04rkn")
+
+[node name="Sprite2D" type="Sprite2D" parent="Paddle2"]
+position = Vector2(290, -17)
+scale = Vector2(3.05, 4.765)
+texture = ExtResource("4_xxon4")
+
+[node name="ScoreZone1" type="Area2D" parent="." node_paths=PackedStringArray("player1_score_label", "player2_score_label", "paddle1", "paddle2", "game_over_label", "ball") groups=["score_zone"]]
+script = ExtResource("5_1cfvc")
+player1_score_label = NodePath("ScoreLabel1")
+player2_score_label = NodePath("../ScoreZone2/ScoreLabel2")
+paddle1 = NodePath("../Paddle1")
+paddle2 = NodePath("../Paddle2")
+game_over_label = NodePath("../GameOverLabel")
+ball = NodePath("../Ball")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ScoreZone1"]
+position = Vector2(-211, 330)
+shape = SubResource("RectangleShape2D_tog4v")
+
+[node name="ScoreLabel1" type="Label" parent="ScoreZone1"]
+offset_left = 500.0
+offset_top = 62.0
+offset_right = 592.0
+offset_bottom = 183.0
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 62
+text = "0
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScoreZone2" type="Area2D" parent="." node_paths=PackedStringArray("player1_score_label", "player2_score_label", "paddle1", "paddle2", "game_over_label", "ball") groups=["score_zone"]]
+scale = Vector2(1.09101, 1.20397)
+script = ExtResource("5_1cfvc")
+player1_score_label = NodePath("../ScoreZone1/ScoreLabel1")
+player2_score_label = NodePath("ScoreLabel2")
+paddle1 = NodePath("../Paddle1")
+paddle2 = NodePath("../Paddle2")
+game_over_label = NodePath("../GameOverLabel")
+ball = NodePath("../Ball")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ScoreZone2"]
+position = Vector2(1088.44, 272.017)
+rotation = 3.14159
+scale = Vector2(0.340825, -0.9974)
+shape = SubResource("RectangleShape2D_tog4v")
+
+[node name="ScoreLabel2" type="Label" parent="ScoreZone2"]
+use_parent_material = true
+offset_left = 547.0
+offset_top = 377.0
+offset_right = 645.0
+offset_bottom = 450.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 53
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+show_behind_parent = true
+position = Vector2(572, 320)
+scale = Vector2(0.596354, 0.595371)
+texture = ExtResource("7_kvkoi")
+
+[node name="GameOverLabel" type="Label" parent="."]
+visible = false
+offset_left = 309.0
+offset_top = 195.0
+offset_right = 804.0
+offset_bottom = 321.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 80
+text = "GAME OVER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="area_entered" from="Ball" to="Ball" method="_on_area_entered"]
+[connection signal="area_entered" from="ScoreZone1" to="Ball" method="_on_score_zone_1_area_entered"]
+[connection signal="area_entered" from="ScoreZone1" to="ScoreZone1" method="_on_area_entered"]
+[connection signal="area_entered" from="ScoreZone2" to="Ball" method="_on_score_zone_2_area_entered"]
+[connection signal="area_entered" from="ScoreZone2" to="ScoreZone2" method="_on_area_entered"]
